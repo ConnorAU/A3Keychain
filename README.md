@@ -1,5 +1,5 @@
 # A3Keychain
-Save server passwords when joining Arma 3 Servers.
+Plug-n-play mod that remembers passwords for servers you've joined.
 
 Download:
 https://steamcommunity.com/sharedfiles/filedetails/?id=1498586879
