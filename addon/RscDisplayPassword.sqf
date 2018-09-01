@@ -20,19 +20,35 @@ switch _mode do {
 		// Arma stuff
 		["onLoad",_params,"RscDisplayPassword",'GUI'] call (uinamespace getvariable 'BIS_fnc_initDisplay');
 
-		// Apply existing password
+		// Add saving event
 		private _okayButton = _display displayCtrl 1;
 		_okayButton ctrlAddEventHandler ["ButtonClick",{["onButtonClick",_this] call A3Keychain_fnc_RscDisplayPassword}];
 
+		// Apply existing password
+		private _savedData = profileNamespace getVariable ["A3Keychain_savedPassword|"+_selectedServer,[]];
+		private _password = _savedData param [1,"",[""]];
+
 		private _valuePassword = _display displayCtrl 101;
-		_valuePassword ctrlSetText (profileNamespace getVariable ["A3Keychain_savedPassword."+_selectedServer,""]);
+		_valuePassword ctrlSetText _password;
 
 	};
 	case "onButtonClick": {
 		
 		// Save password
-		private _valuePassword = (ctrlparent _display) displayCtrl 101;
-		profileNamespace setVariable ["A3Keychain_savedPassword."+_selectedServer,ctrlText _valuePassword];
+		_display = ctrlParent _display;
+		private _valuePassword = _display displayCtrl 101;
+
+		private _browserDisplay = uiNamespace getVariable ["RscDisplayMultiplayer",findDisplay 8];
+		private _valueServerName = _browserDisplay displayCtrl 129;
+
+		private _password = ctrlText _valuePassword;
+		private _serverName = ctrlText _valueServerName;
+
+		if (_password == "") then {
+			profileNamespace setVariable ["A3Keychain_savedPassword|"+_selectedServer,nil];
+		} else {
+			profileNamespace setVariable ["A3Keychain_savedPassword|"+_selectedServer,["v1.1",_password,_serverName]];
+		};
 		saveProfileNamespace;
 
 	};
