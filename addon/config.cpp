@@ -7,7 +7,7 @@
 └──────────────────────────────────────────────────────*/
 
 class CfgPatches {
-    class A3Keychain {
+    class CAU_A3Keychain {
         author="Connor";
         requiredAddons[]={"A3_Ui_F"};
       
@@ -16,21 +16,22 @@ class CfgPatches {
     };
 };
 class CfgFunctions {
-    class A3Keychain {
+    class CAU_A3Keychain {
+        tag="A3Keychain";
         class script {
             class validate {
-                file="A3Keychain\validate.sqf";
+                file="cau\a3keychain\validate.sqf";
                 preinit=1;
             };
 
             class RscDisplayA3KeychainManager {
-                file="A3Keychain\RscDisplayA3KeychainManager.sqf";
+                file="cau\a3keychain\RscDisplayA3KeychainManager.sqf";
             };
             class RscDisplayClient {
-                file="A3Keychain\RscDisplayClient.sqf";
+                file="cau\a3keychain\RscDisplayClient.sqf";
             };
             class RscDisplayPassword {
-                file="A3Keychain\RscDisplayPassword.sqf";
+                file="cau\a3keychain\RscDisplayPassword.sqf";
             };
         };
     };
