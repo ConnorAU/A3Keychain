@@ -1,48 +1,28 @@
-/*──────────────────────────────────────────────────────┐
-│   Author: Connor                                      │
-│   Steam:  https://steamcommunity.com/id/_connor       │
-│   Github: https://github.com/ConnorAU                 │
-│                                                       │
-│   Please do not modify or remove this comment block   │
-└──────────────────────────────────────────────────────*/
-
 class CfgPatches {
     class CAU_A3Keychain {
-        author="Connor";
+        author="ConnorAU";
         requiredAddons[]={"A3_Ui_F"};
-      
+
         units[]={};
         weapons[]={};
     };
 };
-class CfgFunctions {
-    class CAU_A3Keychain {
-        tag="A3Keychain";
-        class script {
-            class validate {
-                file="cau\a3keychain\validate.sqf";
-                preinit=1;
-            };
 
-            class RscDisplayA3KeychainManager {
-                file="cau\a3keychain\RscDisplayA3KeychainManager.sqf";
-            };
-            class RscDisplayClient {
-                file="cau\a3keychain\RscDisplayClient.sqf";
-            };
-            class RscDisplayPassword {
-                file="cau\a3keychain\RscDisplayPassword.sqf";
-            };
-        };
-    };
-};
-
-// Override onLoad events
-class RscDisplayClient {
-    onLoad="['onLoad',_this] call A3Keychain_fnc_RscDisplayClient";
-};
+// Add onLoad event
+class RscText;
 class RscDisplayPassword {
-    onLoad="['onLoad',_this] call A3Keychain_fnc_RscDisplayPassword";
+	class controls {
+		class CAU_A3Keychain_Events_Dummy: RscText {
+			// Added to a control to avoid conflicts with other addons
+    		onLoad="with uiNamespace do {['onLoad',_this] call CAU_A3Keychain_fnc_RscDisplayPassword}";
+			show=0;
+
+			x=0;
+			y=0;
+			w=0;
+			h=0;
+		};
+	};
 };
 
 // Add options button
@@ -57,11 +37,14 @@ class RscDisplayMain {
 					idc=155551;
 					text="A3Keychain";
 					tooltip="Manage saved passwords";
+
 					x=0;
 					y="(5 * 	1.5) * 	(pixelH * pixelGrid * 2) + 	(pixelH)";
 					w="10 * 	(pixelW * pixelGrid * 2)";
 					h="1.5 * 	(pixelH * pixelGrid * 2) - 	(pixelH)";
-					onbuttonclick="(findDisplay 0) createDisplay 'RscDisplayA3KeychainManager';";
+
+					onload="call compile preprocessFileLineNumbers 'cau\a3keychain\initFunctions.sqf'";
+					onbuttonclick="ctrlParent(_this#0) createDisplay 'RscDisplayA3KeychainManager';";
 				};
 			};
 		};
@@ -73,10 +56,11 @@ class RscTitle;
 class RscListNBox;
 class RscButtonMenu;
 class RscButtonMenuSteam;
-class RscDisplayA3KeychainManager {
+class RscDisplayEmpty;
+class RscDisplayA3KeychainManager: RscDisplayEmpty {
     idd=-1;
-    onLoad="['onLoad',_this] call A3Keychain_fnc_RscDisplayA3KeychainManager";
-    onUnload="['onUnload',_this] call A3Keychain_fnc_RscDisplayA3KeychainManager";
+    onLoad="with uiNamespace do {['onLoad',_this] call CAU_A3Keychain_fnc_RscDisplayA3KeychainManager}";
+    onUnload="with uiNamespace do {['onUnload',_this] call CAU_A3Keychain_fnc_RscDisplayA3KeychainManager}";
 
     class controlsBackground {
         class titleTextLeft: RscTitle {
@@ -125,7 +109,7 @@ class RscDisplayA3KeychainManager {
         };
         class workshopButton: RscButtonMenuSteam {
             idc=-1;
-            text="Workshop";
+            text="$STR_WORKSHOP_BUTTON_GAME";
             url="https://steamcommunity.com/sharedfiles/filedetails/?id=1498586879";
 
             x="(safezoneX+(0.5*safezoneW))-(0.5*(220*(pixelW*pixelGrid*0.50)))";
@@ -145,15 +129,15 @@ class RscDisplayA3KeychainManager {
         };
         class removeButton: revealButton {
             idc=5;
-            text="Remove";
-            tooltip="Remove the selected password";
+            text="$STR_DISP_DELETE";
+            tooltip="Delete the selected password";
 
             x="((safezoneX+(0.5*safezoneW))-(0.5*(220*(pixelW*pixelGrid*0.50)))) + (2*(pixelW*pixelGrid*0.50)) + (((4.5*(((((safezoneW/safezoneH)min 1.2)/1.2)/25)*1)))*2)";
         };
         class returnButton: revealButton {
             idc=6;
             default=1;
-            text="Return";
+            text="$STR_DISP_CLOSE";
             tooltip="Return to the main menu";
 
             x="((safezoneX+(0.5*safezoneW))-(0.5*(220*(pixelW*pixelGrid*0.50)))) + (220*(pixelW*pixelGrid*0.50)) - ((4.5*(((((safezoneW/safezoneH)min 1.2)/1.2)/25)*1)))";

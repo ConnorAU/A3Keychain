@@ -1,16 +1,25 @@
-/*──────────────────────────────────────────────────────┐
-│   Author: Connor                                      │
-│   Steam:  https://steamcommunity.com/id/_connor       │
-│   Github: https://github.com/ConnorAU                 │
-│                                                       │
-│   Please do not modify or remove this comment block   │
-└──────────────────────────────────────────────────────*/
+/* ----------------------------------------------------------------------------
+Project:
+	https://github.com/ConnorAU/A3Keychain
+
+Author:
+	ConnorAU - https://github.com/ConnorAU
+
+Description:
+	Validates saved password data
+
+Parameters:
+	None
+
+Return:
+	Nothing
+---------------------------------------------------------------------------- */
 
 // Don't need to run this more than once per session
 if (uiNamespace getVariable ["A3Keychain_variablesValidated",false]) exitwith {};
 
 // The purpose of this is to update old saved data if the saving format is changed
-private _savedData = (allVariables profileNamespace) select {["A3Keychain_savedPassword",_x] call BIS_fnc_inString};
+private _savedData = allVariables profileNamespace select {toLower _x find "a3keychain_savedpassword" == 0};
 
 private ["_saveData","_serverAddress"];
 {
@@ -32,3 +41,5 @@ private ["_saveData","_serverAddress"];
 
 saveProfileNamespace;
 uiNamespace setVariable ["A3Keychain_variablesValidated",true];
+
+nil
